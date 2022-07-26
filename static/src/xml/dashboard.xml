@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="course_snippit" name="Snippet">
+            <Section class="index_snippet">
+                <div class="snippet">
+                    <div class="container">
+                        <div class="text-center mt-5">
+                            <h1> Top Courses</h1>
+                        </div>
+                        <div class="row d-flex align-items-stretch">
+                            <t t-foreach="request.env['slide.channel'].search([], order='members_count desc', limit=6)" t-as="channel">
+                                <div class="col-lg-4 s_col_no_bgcolor pt16 pb0">
+                                    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
+                                        <div class="card bg-white h-100">
+                                            <img class="card-img-top h-100" style="object-fit: cover;" t-attf-src="/web/image/slide.channel/{{channel.id}}/image_1920" alt="" loading="lazy" data-original-id="107" data-mimetype="image/jpeg" />
+                                            <div class="card-body">
+                                                <h5 class="card-title" t-esc="channel.name"/>
+                                                <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
+                                                    <t t-foreach="channel.tag_ids" t-as="tag">
+                                                        <a t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-white text-600 px-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small t-if="channel.total_time" class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
+                                                    <div class="d-flex flex-grow-1 justify-content-end">
+                                                        <t t-if="channel.is_member and channel.completed">
+                                                            <span class="badge badge-pill badge-success pull-right py-1 px-2">
+                                                                <i class="fa fa-check"/>
+ Completed</span>
+                                                        </t>
+                                                        <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
+                                                            <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;"/>
+                                                        </div>
+                                                        <small t-else="">
+                                                            <b t-esc="channel.total_slides"/>
+                                                            steps</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </t>
+                        </div>
+                        <p style="text-align: center;">
+                            <b>
+                                <a href="/slides" class="mb-2 mt-4 btn btn-outline-primary rounded-circle btn-lg" data-original-title="" title="" aria-describedby="tooltip403912">FIND COURSE</a>
+                            </b>
+                        </p>
+
+                    </div>
+                </div>
+            </Section>
+        </template>
+
+        <template id="index_banner" inherit_id="website.snippets" name="Nav Search">
+            <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+                <t t-snippet="course_attendees.course_snippit"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

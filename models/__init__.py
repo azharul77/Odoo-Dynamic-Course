@@ -1,1 +1,1 @@
-from . import attendees
+from . import slide_channel
